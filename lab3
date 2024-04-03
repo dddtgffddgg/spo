@@ -94,3 +94,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     }
     return 0;
 }
+
+
+
+i686-w64-mingw32-gcc -o SimpleTextEditor.exe SimpleTextEditor.c -mwindows
+
