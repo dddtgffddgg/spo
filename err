@@ -1,0 +1,17 @@
+it looks like wine32 is missing, you should install it.
+multiarch needs to be enabled first.  as root, please
+execute "dpkg --add-architecture i386 && apt-get update &&
+apt-get install wine32:i386"
+wine: created the configuration directory '/home/bakieva_ds/.wine'
+0048:err:ole:StdMarshalImpl_MarshalInterface Failed to create ifstub, hr 0x80004002
+0048:err:ole:CoMarshalInterface Failed to marshal the interface {6d5140c1-7436-11ce-8034-00aa006009fa}, hr 0x80004002
+0048:err:ole:apartment_get_local_server_stream Failed: 0x80004002
+0050:err:ole:StdMarshalImpl_MarshalInterface Failed to create ifstub, hr 0x80004002
+0050:err:ole:CoMarshalInterface Failed to marshal the interface {6d5140c1-7436-11ce-8034-00aa006009fa}, hr 0x80004002
+0050:err:ole:apartment_get_local_server_stream Failed: 0x80004002
+0050:err:ole:start_rpcss Failed to open RpcSs service
+wine: failed to open L"C:\\windows\\syswow64\\rundll32.exe": c0000135
+wine: configuration in L"/home/bakieva_ds/.wine" has been updated.
+0134:err:environ:init_peb starting L"Z:\\home\\bakieva_ds\\\0420\0430\0431\043e\0447\0438\0439 \0441\0442\043e\043b\\bakieva_ds\\spo labs\\lab3.exe" in experimental wow64 mode
+0134:err:module:load_wow64_ntdll failed to load L"\\??\\C:\\windows\\syswow64\\ntdll.dll" error c0000135
+0134:err:virtual:virtual_setup_exception stack overflow 1808 bytes addr 0x170025c09 stack 0x6208f0 (0x620000-0x621000-0x71fd20)
