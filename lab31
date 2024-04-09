@@ -1,0 +1,177 @@
+шаг 1: в редакторе например nano копируем код:
+
+#include <windows.h>
+#include <stdio.h>
+
+#define ID_FILE_NEW     1
+#define ID_FILE_OPEN    2
+#define ID_FILE_SAVE    3
+#define ID_FILE_EXIT    4
+#define ID_EDIT_COPY    5
+#define ID_EDIT_PASTE   6
+#define ID_EDIT_CUT     7
+#define ID_HELP_ABOUT   8
+
+HWND hwndEdit;
+
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    switch(msg) {
+        case WM_CREATE:
+            hwndEdit = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "", WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL, 0, 0, 100, 100, hwnd, NULL, GetModuleHandle(NULL), NULL);
+            break;
+        case WM_SIZE:
+            MoveWindow(hwndEdit, 0, 0, LOWORD(lParam), HIWORD(lParam), TRUE);
+            break;
+        case WM_COMMAND:
+            switch(LOWORD(wParam)) {
+                case ID_FILE_NEW:
+                    SetWindowText(hwndEdit, "");
+                    break;
+                case ID_FILE_OPEN:
+                    {
+                        OPENFILENAME ofn;
+                        char szFile[260];
+                        ZeroMemory(&ofn, sizeof(ofn));
+                        ofn.lStructSize = sizeof(ofn);
+                        ofn.hwndOwner = hwnd;
+                        ofn.lpstrFile = szFile;
+                        ofn.lpstrFile[0] = '\0';
+                        ofn.nMaxFile = sizeof(szFile);
+                        ofn.lpstrFilter = "Text Files\0*.TXT\0All Files\0*.*\0";
+                        ofn.nFilterIndex = 1;
+                        ofn.lpstrFileTitle = NULL;
+                        ofn.nMaxFileTitle = 0;
+                        ofn.lpstrInitialDir = NULL;
+                        ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+                        if(GetOpenFileName(&ofn) == TRUE) {
+                            FILE *file = fopen(ofn.lpstrFile, "r");
+                            if(file != NULL) {
+                                fseek(file, 0, SEEK_END);
+                                long size = ftell(file);
+                                fseek(file, 0, SEEK_SET);
+                                char *buffer = malloc(size + 1);
+                                fread(buffer, 1, size, file);
+                                buffer[size] = '\0';
+                                SetWindowText(hwndEdit, buffer);
+                                fclose(file);
+                                free(buffer);
+                            }
+                        }
+                    }
+                    break;
+                case ID_FILE_SAVE:
+                    {
+                        OPENFILENAME ofn;
+                        char szFile[260];
+                        ZeroMemory(&ofn, sizeof(ofn));
+                        ofn.lStructSize = sizeof(ofn);
+                        ofn.hwndOwner = hwnd;
+                        ofn.lpstrFile = szFile;
+                        ofn.lpstrFile[0] = '\0';
+                        ofn.nMaxFile = sizeof(szFile);
+                        ofn.lpstrFilter = "Text Files\0*.TXT\0All Files\0*.*\0";
+                        ofn.nFilterIndex = 1;
+                        ofn.lpstrFileTitle = NULL;
+                        ofn.nMaxFileTitle = 0;
+                        ofn.lpstrInitialDir = NULL;
+                        ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT;
+                        if(GetSaveFileName(&ofn) == TRUE) {
+                            FILE *file = fopen(ofn.lpstrFile, "w");
+                            if(file != NULL) {
+                                char *buffer;
+                                DWORD size = GetWindowTextLength(hwndEdit);
+                                buffer = malloc(size + 1);
+                                GetWindowText(hwndEdit, buffer, size + 1);
+                                fwrite(buffer, 1, size, file);
+                                fclose(file);
+                                free(buffer);
+                            }
+                        }
+                    }
+                    break;
+                case ID_FILE_EXIT:
+                    PostQuitMessage(0);
+                    break;
+                case ID_EDIT_COPY:
+                    SendMessage(hwndEdit, WM_COPY, 0, 0);
+                    break;
+                case ID_EDIT_PASTE:
+                    SendMessage(hwndEdit, WM_PASTE, 0, 0);
+                    break;
+                case ID_EDIT_CUT:
+                    SendMessage(hwndEdit, WM_CUT, 0, 0);
+                    break;
+                case ID_HELP_ABOUT:
+                    MessageBox(hwnd, "Простой текстовый редактор на WinAPI", "О программе", MB_OK | MB_ICONINFORMATION);
+                    break;
+            }
+            break;
+        case WM_CLOSE:
+            DestroyWindow(hwnd);
+            break;
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            break;
+        default:
+            return DefWindowProc(hwnd, msg, wParam, lParam);
+    }
+    return 0;
+}
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    WNDCLASSEX wc;
+    HWND hwnd;
+    MSG Msg;
+
+    wc.cbSize        = sizeof(WNDCLASSEX);
+    wc.style         = 0;
+    wc.lpfnWndProc   = WndProc;
+    wc.cbClsExtra    = 0;
+    wc.cbWndExtra    = 0;
+    wc.hInstance     = hInstance;
+    wc.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
+    wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
+    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+    wc.lpszMenuName  = MAKEINTRESOURCE(IDR_MENU1);
+    wc.lpszClassName = "SimpleTextEditor";
+    wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
+
+    if(!RegisterClassEx(&wc)) {
+        MessageBox(NULL, "Window Registration Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+        return 0;
+    }
+
+    hwnd = CreateWindowEx(WS_EX_CLIENTEDGE, "SimpleTextEditor", "Simple Text Editor", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 640, 480, NULL, NULL, hInstance, NULL);
+
+    if(hwnd == NULL) {
+        MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+        return 0;
+    }
+
+    ShowWindow(hwnd, nCmdShow);
+    UpdateWindow(hwnd);
+
+    while(GetMessage(&Msg, NULL, 0, 0) > 0) {
+        TranslateMessage(&Msg);
+        DispatchMessage(&Msg);
+    }
+    return Msg.wParam;
+}
+
+
+после компилируем в кросс компиляторе mingw-gcc (он должен быть скачан) и запускаем полученный экзешник в Wine (тоже должен быть установлен). 
+
+как установить mingw-gcc: через ubuntu илли дебиан: открыть терминал и выполнить комнады
+sudo apt update
+sudo apt install mingw-w64
+
+
+как установить wine: открыть терминал убунту или дебиан\
+1. sudo dpkg --add-architecture i386
+sudo apt update
+
+2. wget -qO - https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
+3. sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ YOUR_UBUNTU_VERSION_HERE main'
+Замените YOUR_UBUNTU_VERSION_HERE на вашу версию Ubuntu, например, bionic или focal.
+4. sudo apt update
+sudo apt install --install-recommends winehq-stable
