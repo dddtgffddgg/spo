@@ -1,0 +1,68 @@
+#include <gtk/gtk.h>
+#include <sqlite3.h>
+
+sqlite3 *db;
+
+// Функция для отображения данных таблиц и запросов
+void display_data() {
+    // Реализация отображения данных
+}
+
+// Функция для редактирования данных
+void edit_data() {
+    // Реализация редактирования данных
+}
+
+// Функция для добавления данных
+void add_data() {
+    // Реализация добавления данных
+}
+
+// Функция для удаления данных
+void delete_data() {
+    // Реализация удаления данных
+}
+
+// Функция обработки сигнала закрытия окна
+gboolean on_window_closed(GtkWidget *widget, GdkEvent *event, gpointer data) {
+    sqlite3_close(db);
+    gtk_main_quit();
+    return TRUE;
+}
+
+int main(int argc, char *argv[]) {
+    // Инициализация GTK+
+    gtk_init(&argc, &argv);
+
+    // Открытие базы данных SQLite
+    int rc = sqlite3_open("database.db", &db);
+    if (rc) {
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return(1);
+    } else {
+        fprintf(stdout, "Opened database successfully\n");
+    }
+
+    // Создание главного окна
+    GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_title(GTK_WINDOW(window), "SQLite Database Wrapper (GTK+)");
+    gtk_window_set_default_size(GTK_WINDOW(window), 400, 300);
+    g_signal_connect(window, "delete-event", G_CALLBACK(on_window_closed), NULL);
+
+    // Создание виджетов интерфейса
+    // ...
+
+    // Подключение сигналов к функциям
+    // ...
+
+    // Отображение окна
+    gtk_widget_show_all(window);
+
+    // Запуск основного цикла GTK+
+    gtk_main();
+
+    // Закрытие базы данных SQLite
+    sqlite3_close(db);
+
+    return 0;
+}
