@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "lab4_sqlite.h"
 
+int callback(void *, int, char **, char **);
+
 void sqlite_get_data()
 {
     sqlite3 *db;
@@ -15,12 +17,9 @@ void sqlite_get_data()
 
     char *sql = "SELECT \
                   id, \
-                  name, \
-                  annotation, \
-                  pages, \
-                  isbn \
+                  name \
               FROM \
-                  books;";
+                  your_table;";
     rc = sqlite3_exec(db, sql, callback, NULL, &err_msg);
     if (rc != SQLITE_OK)
     {
@@ -31,5 +30,3 @@ void sqlite_get_data()
     }
     sqlite3_close(db);
 }
-
-// Остальные функции остаются без изменений
