@@ -9,23 +9,9 @@
   </object>
   <object class="GtkListStore" id="liststore_components">
     <columns>
-      <!-- column-name author_id -->
+      <!-- column-name id -->
       <column type="guint"/>
-      <!-- column-name author_name -->
-      <column type="gchararray"/>
-      <!-- column-name book_id -->
-      <column type="guint"/>
-      <!-- column-name book_title -->
-      <column type="gchararray"/>
-      <!-- column-name book_description -->
-      <column type="gchararray"/>
-      <!-- column-name book_pages -->
-      <column type="guint"/>
-      <!-- column-name publisher_id -->
-      <column type="guint"/>
-      <!-- column-name publisher_name -->
-      <column type="gchararray"/>
-      <!-- column-name publisher_city -->
+      <!-- column-name name -->
       <column type="gchararray"/>
     </columns>
   </object>
