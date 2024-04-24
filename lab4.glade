@@ -9,15 +9,15 @@
   </object>
   <object class="GtkListStore" id="liststore_components">
     <columns>
-      <!-- column-name id -->
+      <!-- column-name comp_id -->
       <column type="guint"/>
-      <!-- column-name name -->
+      <!-- column-name comp_name -->
       <column type="gchararray"/>
-      <!-- column-name annotation -->
-      <column type="gchararray"/>
-      <!-- column-name pages -->
+      <!-- column-name price -->
+      <column type="gfloat"/>
+      <!-- column-name shop_id -->
       <column type="guint"/>
-      <!-- column-name isbn -->
+      <!-- column-name shop_name -->
       <column type="gchararray"/>
     </columns>
   </object>
@@ -69,7 +69,49 @@
                         <property name="position">0</property>
                       </packing>
                     </child>
-                    <!-- Добавляем другие кнопки или элементы управления, если необходимо -->
+                    <child>
+                      <object class="GtkCheckButton" id="show_hidden">
+                        <property name="label" translatable="yes">Скрытые</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="on_show_hidden_toggled" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="btnabout">
+                        <property name="label" translatable="yes">О программе</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="on_btnabout_clicked" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="btnexit">
+                        <property name="label" translatable="yes">Выход</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="on_btnexit_clicked" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -98,15 +140,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkTreeViewColumn" id="cln_id">
+                  <object class="GtkTreeViewColumn" id="cln_comp_id">
                     <property name="visible">False</property>
                     <property name="resizable">True</property>
-                    <property name="title" translatable="yes">ID</property>
+                    <property name="title" translatable="yes">id компонента</property>
                     <child>
-                      <object class="GtkCellRendererText" id="clnrender_id">
-                        <property name="editable">True</property>
-                        <signal name="edited" handler="on_cellrenderertext_id_edited" swapped="no"/>
-                      </object>
+                      <object class="GtkCellRendererSpin" id="clnrender_comp_id"/>
                       <attributes>
                         <attribute name="text">0</attribute>
                       </attributes>
@@ -114,13 +153,13 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkTreeViewColumn" id="cln_name">
+                  <object class="GtkTreeViewColumn" id="cln_comp_name">
                     <property name="resizable">True</property>
-                    <property name="title" translatable="yes">Название</property>
+                    <property name="title" translatable="yes">Наименование</property>
                     <child>
-                      <object class="GtkCellRendererText" id="clnrender_name">
+                      <object class="GtkCellRendererText" id="clnrender_comp_name">
                         <property name="editable">True</property>
-                        <signal name="edited" handler="on_cellrenderertext_name_edited" swapped="no"/>
+                        <signal name="edited" handler="on_cellrenderertext_compname_edited" swapped="no"/>
                       </object>
                       <attributes>
                         <attribute name="text">1</attribute>
@@ -129,13 +168,14 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkTreeViewColumn" id="cln_annotation">
+                  <object class="GtkTreeViewColumn" id="cln_price">
                     <property name="resizable">True</property>
-                    <property name="title" translatable="yes">Аннотация</property>
+                    <property name="title" translatable="yes">Цена</property>
                     <child>
-                      <object class="GtkCellRendererText" id="clnrender_annotation">
+                      <object class="GtkCellRendererSpin" id="clnrender_price">
                         <property name="editable">True</property>
-                        <signal name="edited" handler="on_cellrenderertext_annotation_edited" swapped="no"/>
+                        <property name="adjustment">adjustment_price</property>
+                        <signal name="edited" handler="on_cellrendererspin_price_edited" swapped="no"/>
                       </object>
                       <attributes>
                         <attribute name="text">2</attribute>
@@ -144,11 +184,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkTreeViewColumn" id="cln_pages">
+                  <object class="GtkTreeViewColumn" id="cln_shop_id">
+                    <property name="visible">False</property>
                     <property name="resizable">True</property>
-                    <property name="title" translatable="yes">Страницы</property>
+                    <property name="title" translatable="yes">id магазина</property>
                     <child>
-                      <object class="GtkCellRendererSpin" id="clnrender_pages"/>
+                      <object class="GtkCellRendererSpin" id="clnrender_shop_id"/>
                       <attributes>
                         <attribute name="text">3</attribute>
                       </attributes>
@@ -156,11 +197,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkTreeViewColumn" id="cln_isbn">
+                  <object class="GtkTreeViewColumn" id="cln_shop">
                     <property name="resizable">True</property>
-                    <property name="title" translatable="yes">ISBN</property>
+                    <property name="title" translatable="yes">Магазин</property>
+                    <property name="clickable">True</property>
                     <child>
-                      <object class="GtkCellRendererText" id="clnrender_isbn"/>
+                      <object class="GtkCellRendererText" id="clnrender_shop"/>
                       <attributes>
                         <attribute name="text">4</attribute>
                       </attributes>
