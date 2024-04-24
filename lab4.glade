@@ -13,6 +13,12 @@
       <column type="guint"/>
       <!-- column-name name -->
       <column type="gchararray"/>
+      <!-- column-name annotation -->
+      <column type="gchararray"/>
+      <!-- column-name pages -->
+      <column type="guint"/>
+      <!-- column-name isbn -->
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkWindow" id="main_window">
@@ -49,7 +55,21 @@
                     <property name="orientation">vertical</property>
                     <property name="spacing">5</property>
                     <property name="layout_style">start</property>
-                    <!-- Ваши кнопки здесь -->
+                    <child>
+                      <object class="GtkButton" id="btnsave">
+                        <property name="label" translatable="yes">Сохранить в БД</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="on_btnsave_clicked" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <!-- Добавляем другие кнопки или элементы управления, если необходимо -->
                   </object>
                 </child>
               </object>
@@ -72,7 +92,81 @@
                 <property name="can_focus">True</property>
                 <property name="model">liststore_components</property>
                 <property name="enable_grid_lines">both</property>
-                <!-- Ваши столбцы здесь -->
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection" id="selection">
+                    <property name="mode">multiple</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="cln_id">
+                    <property name="visible">False</property>
+                    <property name="resizable">True</property>
+                    <property name="title" translatable="yes">ID</property>
+                    <child>
+                      <object class="GtkCellRendererText" id="clnrender_id">
+                        <property name="editable">True</property>
+                        <signal name="edited" handler="on_cellrenderertext_id_edited" swapped="no"/>
+                      </object>
+                      <attributes>
+                        <attribute name="text">0</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="cln_name">
+                    <property name="resizable">True</property>
+                    <property name="title" translatable="yes">Название</property>
+                    <child>
+                      <object class="GtkCellRendererText" id="clnrender_name">
+                        <property name="editable">True</property>
+                        <signal name="edited" handler="on_cellrenderertext_name_edited" swapped="no"/>
+                      </object>
+                      <attributes>
+                        <attribute name="text">1</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="cln_annotation">
+                    <property name="resizable">True</property>
+                    <property name="title" translatable="yes">Аннотация</property>
+                    <child>
+                      <object class="GtkCellRendererText" id="clnrender_annotation">
+                        <property name="editable">True</property>
+                        <signal name="edited" handler="on_cellrenderertext_annotation_edited" swapped="no"/>
+                      </object>
+                      <attributes>
+                        <attribute name="text">2</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="cln_pages">
+                    <property name="resizable">True</property>
+                    <property name="title" translatable="yes">Страницы</property>
+                    <child>
+                      <object class="GtkCellRendererSpin" id="clnrender_pages"/>
+                      <attributes>
+                        <attribute name="text">3</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="cln_isbn">
+                    <property name="resizable">True</property>
+                    <property name="title" translatable="yes">ISBN</property>
+                    <child>
+                      <object class="GtkCellRendererText" id="clnrender_isbn"/>
+                      <attributes>
+                        <attribute name="text">4</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
