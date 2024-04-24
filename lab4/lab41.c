@@ -9,7 +9,10 @@
 enum
 {
     ID = 0,
-    NAME
+    NAME,
+    ANNOTATION,
+    PAGES,
+    ISBN
 };
 
 struct MainWindowObjects
@@ -22,11 +25,12 @@ struct MainWindowObjects
 int callback(void *not_used, int argc, char **argv, char **col_names)
 {
     GtkTreeIter iter;
-    if (argc == 2)
+    if (argc == 5)
     {
         gtk_list_store_append(GTK_LIST_STORE(mainWindowObjects.liststore), &iter);
         gtk_list_store_set(GTK_LIST_STORE(mainWindowObjects.liststore), &iter, ID,
-                           atoi(argv[ID]), NAME, argv[NAME], -1);
+                           atoi(argv[ID]), NAME, argv[NAME], ANNOTATION, argv[ANNOTATION],
+                           PAGES, atoi(argv[PAGES]), ISBN, argv[ISBN], -1);
     }
     return 0;
 }
