@@ -1,15 +1,32 @@
-NAME = lab03
+NAME = lab04
+SQLITE = $(NAME)_sqlite
+
 SRC = $(NAME).c
-EXEC = $(NAME).exe
+OBJ = $(NAME).o
+SQLITE_SRC = $(SQLITE).c
+SQLITE_OBJ = $(SQLITE).o
 
-CC = x86_64-w64-mingw32-gcc
-CFLAGS = -Wall -mwindows
+ifeq ($(OS),Windows_NT)
+	EXEC := $(NAME).exe
+	LDLIBS := -mwindows
+else
+	EXEC := $(NAME)
+endif
 
-build_and_run: $(EXEC)
-	wine $(EXEC)
+CC = gcc
+LDLIBS += -lsqlite3 `pkg-config --libs gtk+-3.0 gmodule-2.0`
+CFLAGS = -Wall -g `pkg-config --cflags gtk+-3.0 gmodule-2.0`
 
-$(EXEC): $(SRC)
-	$(CC) $(SRC) -o $(EXEC) $(CFLAGS)
+$(EXEC): $(OBJ) $(SQLITE_OBJ)
+	$(CC) $(OBJ) $(SQLITE_OBJ) -o $(EXEC) $(LDLIBS)
+
+$(OBJ): $(SRC)
+	$(CC) $(CFLAGS) -c $(SRC)
+
+$(SQLITE_OBJ): $(SQLITE_SRC)
+	$(CC) -Wall -c $(SQLITE_SRC)
+
 
 clean:
 	rm -f $(EXEC)
+	rm -f *.o
