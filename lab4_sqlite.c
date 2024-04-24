@@ -1,6 +1,6 @@
 #include <sqlite3.h>
 #include <stdio.h>
-#include "lab04_sqlite.h"
+#include "lab4_sqlite.h"
 
 int callback(void *, int, char **, char **);
 void sqlite_get_data()
