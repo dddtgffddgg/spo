@@ -15,9 +15,12 @@ void sqlite_get_data()
 
     char *sql = "SELECT \
                   id, \
-                  name \
+                  name, \
+                  annotation, \
+                  pages, \
+                  isbn \
               FROM \
-                  your_table;";
+                  books;";
     rc = sqlite3_exec(db, sql, callback, NULL, &err_msg);
     if (rc != SQLITE_OK)
     {
