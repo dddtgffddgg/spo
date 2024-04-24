@@ -1,4 +1,4 @@
-#include "lab04_sqlite.h"
+#include "lab4_sqlite.h"
 
 #include <gtk/gtk.h>
 #include <stdlib.h>
