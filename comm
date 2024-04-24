@@ -3,3 +3,13 @@
 (lab4:4985): Gtk-CRITICAL **: 13:54:24.884: gtk_widget_show_all: assertion 'GTK_IS_WIDGET (widget)' failed
 Failed to select data
 SQLite error: no such table: components
+
+
+gcc -Wall -g `pkg-config --cflags gtk+-3.0 gmodule-2.0` -c lab4.c
+gcc -Wall -c lab4_sqlite.c
+lab4_sqlite.c: In function ‘sqlite_get_data’:
+lab4_sqlite.c:21:32: error: ‘callback’ undeclared (first use in this function)
+   21 |     rc = sqlite3_exec(db, sql, callback, NULL, &err_msg);
+      |                                ^~~~~~~~
+lab4_sqlite.c:21:32: note: each undeclared identifier is reported only once for each function it appears in
+make: *** [makefile:27: lab4_sqlite.o] Ошибка 1
