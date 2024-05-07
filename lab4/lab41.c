@@ -161,10 +161,12 @@ G_MODULE_EXPORT void on_btnabout_clicked(GtkButton *button, gpointer data)
 
 G_MODULE_EXPORT void on_window_destroy(GtkWidget *window, gpointer data)
 {
+    sqlite_close_connection(); // Закрыть соединение с базой данных перед выходом
     gtk_main_quit();
 }
 
 G_MODULE_EXPORT void on_btnexit_clicked(GtkWidget *window, gpointer data)
 {
+    sqlite_close_connection(); // Закрыть соединение с базой данных перед выходом
     gtk_main_quit();
 }
