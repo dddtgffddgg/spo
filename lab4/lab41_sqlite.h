@@ -3,8 +3,11 @@
 
 #define DB_FILE "mydb.db"
 
+#include <sqlite3.h>
+
+void sqlite_open_db();
+void sqlite_close_db();
 void sqlite_get_data();
-// Остальные функции остаются без изменений
+void sqlite_exit();
 
 #endif
-
