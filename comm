@@ -1,16 +1,1 @@
-gcc -Wall -g `pkg-config --cflags gtk+-3.0 gmodule-2.0` -c lab41_sqlite.c
-gcc lab41.o lab41_sqlite.o -o lab41 -lsqlite3 `pkg-config --libs gtk+-3.0 gmodule-2.0`
-/usr/bin/ld: lab41_sqlite.o: в функции «sqlite_open_db»:
-/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab41_sqlite.c:9: повторное определение «sqlite_open_db»; lab41.o:/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab41.c:9: здесь первое определение
-/usr/bin/ld: lab41_sqlite.o: в функции «sqlite_close_db»:
-/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab41_sqlite.c:18: повторное определение «sqlite_close_db»; lab41.o:/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab41.c:18: здесь первое определение
-/usr/bin/ld: lab41_sqlite.o: в функции «sqlite_get_data»:
-/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab41_sqlite.c:25: повторное определение «sqlite_get_data»; lab41.o:/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab41.c:25: здесь первое определение
-/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/12/../../../x86_64-linux-gnu/Scrt1.o: в функции «_start»:
-(.text+0x17): неопределённая ссылка на «main»
-/usr/bin/ld: lab41.o: в функции «sqlite_get_data»:
-/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab41.c:37: неопределённая ссылка на «callback»
-/usr/bin/ld: lab41_sqlite.o: в функции «sqlite_get_data»:
-/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab41_sqlite.c:37: неопределённая ссылка на «callback»
-collect2: error: ld returned 1 exit status
-make: *** [makefile:21: lab41] Ошибка 1
+identifier "DB_FILE" is undefined
