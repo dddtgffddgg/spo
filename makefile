@@ -1,32 +1,31 @@
-NAME = lab04
-SQLITE = $(NAME)_sqlite
+CC=gcc
+CFLAGS=-Wall -Wextra -pedantic -O3
+OMP_FLAGS=-fopenmp
 
-SRC = $(NAME).c
-OBJ = $(NAME).o
-SQLITE_SRC = $(SQLITE).c
-SQLITE_OBJ = $(SQLITE).o
+EXEC_1 = program_1
+SRC_1 = $(EXEC_1).c
 
-ifeq ($(OS),Windows_NT)
-	EXEC := $(NAME).exe
-	LDLIBS := -mwindows
-else
-	EXEC := $(NAME)
-endif
+EXEC_2 = program_2
+SRC_2 = $(EXEC_2).c
 
-CC = gcc
-LDLIBS += -lsqlite3 `pkg-config --libs gtk+-3.0 gmodule-2.0`
-CFLAGS = -Wall -g `pkg-config --cflags gtk+-3.0 gmodule-2.0`
+EXEC_3 = program_3
+SRC_3 = $(EXEC_3).c
 
-$(EXEC): $(OBJ) $(SQLITE_OBJ)
-	$(CC) $(OBJ) $(SQLITE_OBJ) -o $(EXEC) $(LDLIBS)
+.PHONY: all clean
 
-$(OBJ): $(SRC)
-	$(CC) $(CFLAGS) -c $(SRC)
+all: $(EXEC_1) $(EXEC_2) $(EXEC_3)
+	./$(EXEC_1)
+	./$(EXEC_2)
+	./$(EXEC_3)
 
-$(SQLITE_OBJ): $(SQLITE_SRC)
-	$(CC) -Wall -c $(SQLITE_SRC)
+$(EXEC_1): $(SRC_1)
+	$(CC) $(CFLAGS) -o $@ $< -lm
 
+$(EXEC_2): $(SRC_2)
+	$(CC) $(CFLAGS) -o $@ $< -pthread
+
+$(EXEC_3): $(SRC_3)
+	$(CC) $(CFLAGS) $(OMP_FLAGS) -o $@ $< -lm
 
 clean:
-	rm -f $(EXEC)
-	rm -f *.o
+	rm -f $(EXEC_1) $(EXEC_2) $(EXEC_3)
