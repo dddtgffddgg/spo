@@ -24,7 +24,7 @@ $(OBJ): $(SRC)
 	$(CC) $(CFLAGS) -c $(SRC)
 
 $(SQLITE_OBJ): $(SQLITE_SRC)
-	$(CC) -Wall -c $(SQLITE_SRC)
+	$(CC) $(CFLAGS) -c $(SQLITE_SRC)
 
 clean:
 	rm -f $(EXEC)
