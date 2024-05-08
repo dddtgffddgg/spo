@@ -26,7 +26,6 @@ $(OBJ): $(SRC)
 $(SQLITE_OBJ): $(SQLITE_SRC)
 	$(CC) -Wall -c $(SQLITE_SRC)
 
-
 clean:
 	rm -f $(EXEC)
 	rm -f *.o
