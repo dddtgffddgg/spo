@@ -1,12 +1,4 @@
-gcc -Wall -g `pkg-config --cflags gtk+-3.0 gmodule-2.0` -c lab41.c
-lab41.c: In function ‘main’:
-lab41.c:10:5: warning: implicit declaration of function ‘sqlite_close_connection’ [-Wimplicit-function-declaration]
-   10 |     sqlite_close_connection();
-      |     ^~~~~~~~~~~~~~~~~~~~~~~
-gcc lab41.o lab41_sqlite.o -o lab41 -lsqlite3 `pkg-config --libs gtk+-3.0 gmodule-2.0`
-/usr/bin/ld: lab41.o: в функции «main»:
-/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab41.c:10: неопределённая ссылка на «sqlite_close_connection»
-/usr/bin/ld: lab41_sqlite.o: в функции «sqlite_get_data»:
-/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab41_sqlite.c:37: неопределённая ссылка на «callback»
-collect2: error: ld returned 1 exit status
-make: *** [makefile:21: lab41] Ошибка 1
+** (lab4:6215): WARNING **: 14:13:31.679: Не удалось открыть файл «lab04.glade»: Нет такого файла или каталога
+
+free(): invalid pointer
+Аварийный останов (образ памяти сброшен на диск)
