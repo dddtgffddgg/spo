@@ -8,7 +8,6 @@
 void sqlite_open_db();
 void sqlite_close_db();
 void sqlite_get_data();
-void sqlite_update(int compid, const char *compname, float price);
-void sqlite_close_connection();
+void sqlite_exit();
 
 #endif
