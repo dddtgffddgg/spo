@@ -4,14 +4,6 @@
 
 static sqlite3 *db = NULL;
 
-int callback(void *NotUsed, int argc, char **argv, char **azColName){
-    int i;
-    for(i = 0; i < argc; i++){
-        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-    }
-    printf("\n");
-    return 0;
-}
 
 void sqlite_open_db() {
     int rc;
@@ -20,6 +12,15 @@ void sqlite_open_db() {
         fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
     }
+}
+
+int callback(void *NotUsed, int argc, char **argv, char **azColName){
+    int i;
+    for(i = 0; i < argc; i++){
+        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+    }
+    printf("\n");
+    return 0;
 }
 
 void sqlite_close_db() {
