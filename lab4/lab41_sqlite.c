@@ -1,6 +1,6 @@
 #include <sqlite3.h>
 #include <stdio.h>
-#include "lab4_sqlite.h"
+#include "lab41_sqlite.h"
 
 static sqlite3 *db = NULL;
 
@@ -52,4 +52,4 @@ void sqlite_get_data() {
 void sqlite_exit() {
     sqlite_close_db();
     printf("Exiting...\n");
-} \
+} 
