@@ -1,4 +1,4 @@
-NAME = lab4
+NAME = lab41
 SQLITE = $(NAME)_sqlite
 
 SRC = $(NAME).c
