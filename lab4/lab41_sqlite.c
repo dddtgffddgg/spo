@@ -4,7 +4,14 @@
 
 static sqlite3 *db = NULL;
 
-int callback(void *, int, char **, char **);
+int callback(void *NotUsed, int argc, char **argv, char **azColName){
+    int i;
+    for(i = 0; i < argc; i++){
+        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+    }
+    printf("\n");
+    return 0;
+}
 
 void sqlite_open_db() {
     int rc;
