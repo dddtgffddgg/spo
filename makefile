@@ -14,9 +14,12 @@ SRC_3 = $(EXEC_3).c
 .PHONY: all clean
 
 all: $(EXEC_1) $(EXEC_2) $(EXEC_3)
-	./$(EXEC_1)
-	./$(EXEC_2)
-	./$(EXEC_3)
+	@echo "Running $(EXEC_1)"
+	time ./$(EXEC_1)
+	@echo "Running $(EXEC_2)"
+	time ./$(EXEC_2)
+	@echo "Running $(EXEC_3)"
+	time ./$(EXEC_3)
 
 $(EXEC_1): $(SRC_1)
 	$(CC) $(CFLAGS) -o $@ $< -lm
