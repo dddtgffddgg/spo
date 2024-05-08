@@ -1,15 +1,20 @@
-(lab4:4985): Gtk-CRITICAL **: 13:54:24.884: gtk_cell_layout_set_cell_data_func: assertion 'GTK_IS_CELL_LAYOUT (cell_layout)' failed
-
-(lab4:4985): Gtk-CRITICAL **: 13:54:24.884: gtk_widget_show_all: assertion 'GTK_IS_WIDGET (widget)' failed
-Failed to select data
-SQLite error: no such table: components
-
-
 gcc -Wall -g `pkg-config --cflags gtk+-3.0 gmodule-2.0` -c lab4.c
+lab4.c: In function ‘on_btnsave_clicked’:
+lab4.c:108:9: warning: implicit declaration of function ‘sqlite_update’; did you mean ‘sqlite_exit’? [-Wimplicit-function-declaration]
+  108 |         sqlite_update(compid, compname, price);
+      |         ^~~~~~~~~~~~~
+      |         sqlite_exit
+lab4.c: In function ‘on_window_destroy’:
+lab4.c:164:5: warning: implicit declaration of function ‘sqlite_close_connection’ [-Wimplicit-function-declaration]
+  164 |     sqlite_close_connection(); // Закрыть соединение с базой данных перед выходом
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
 gcc -Wall -c lab4_sqlite.c
-lab4_sqlite.c: In function ‘sqlite_get_data’:
-lab4_sqlite.c:21:32: error: ‘callback’ undeclared (first use in this function)
-   21 |     rc = sqlite3_exec(db, sql, callback, NULL, &err_msg);
-      |                                ^~~~~~~~
-lab4_sqlite.c:21:32: note: each undeclared identifier is reported only once for each function it appears in
-make: *** [makefile:27: lab4_sqlite.o] Ошибка 1
+gcc lab4.o lab4_sqlite.o -o lab4 -lsqlite3 `pkg-config --libs gtk+-3.0 gmodule-2.0`
+/usr/bin/ld: lab4.o: в функции «on_btnsave_clicked»:
+/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab4.c:108: неопределённая ссылка на «sqlite_update»
+/usr/bin/ld: lab4.o: в функции «on_window_destroy»:
+/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab4.c:164: неопределённая ссылка на «sqlite_close_connection»
+/usr/bin/ld: lab4.o: в функции «on_btnexit_clicked»:
+/home/bakieva_ds/Рабочий стол/bakieva_ds/spo labs/lab4/lab4.c:170: неопределённая ссылка на «sqlite_close_connection»
+collect2: error: ld returned 1 exit status
+make: *** [makefile:21: lab4] Ошибка 1
