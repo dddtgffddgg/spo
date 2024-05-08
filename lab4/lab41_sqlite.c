@@ -45,4 +45,4 @@ void sqlite_get_data() {
 void sqlite_exit() {
     sqlite_close_db();
     printf("Exiting...\n");
-}
+} \
