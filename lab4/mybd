@@ -1,0 +1,36 @@
+CREATE TABLE authors (
+    author_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE publishers (
+    publisher_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    city TEXT NOT NULL
+);
+
+CREATE TABLE books (
+    book_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    annotation TEXT NOT NULL,
+    pages INTEGER NOT NULL,
+    isbn TEXT NOT NULL,
+    author_id INTEGER NOT NULL,
+    publisher_id INTEGER NOT NULL,
+    FOREIGN KEY (author_id) REFERENCES authors (author_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (publisher_id) REFERENCES publishers (publisher_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+INSERT INTO authors (name) VALUES ("Author One"), ("Author Two");
+
+INSERT INTO publishers (name, city) VALUES ("Publisher One", "City One"), ("Publisher Two", "City Two");
+
+INSERT INTO books (title, annotation, pages, isbn, author_id, publisher_id)
+VALUES 
+    ("Book One", "Annotation One", 300, "ISBN001", 1, 1),
+    ("Book Two", "Annotation Two", 400, "ISBN002", 2, 2),
+    ("Book Three", "Annotation Three", 250, "ISBN003", 1, 2),
+    ("Book Four", "Annotation Four", 500, "ISBN004", 2, 1);
+
+
+sqlite3 mydb.db < create_db.sql
