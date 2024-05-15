@@ -58,6 +58,61 @@ void sqlite_get_data() {
     }
 }
 
+void sqlite_insert_author(const char *name) {
+    if (db == NULL) {
+        fprintf(stderr, "Database is not open.\n");
+        return;
+    }
+    
+    char *sql = sqlite3_mprintf("INSERT INTO authors (name) VALUES (%Q);", name);
+    char *err_msg = 0;
+    int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    sqlite3_free(sql);
+    
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to insert data into authors\n");
+        fprintf(stderr, "SQLite error: %s\n", err_msg);
+        sqlite3_free(err_msg);
+    }
+}
+
+void sqlite_insert_publisher(const char *name, const char *city) {
+    if (db == NULL) {
+        fprintf(stderr, "Database is not open.\n");
+        return;
+    }
+    
+    char *sql = sqlite3_mprintf("INSERT INTO publishers (name, city) VALUES (%Q, %Q);", name, city);
+    char *err_msg = 0;
+    int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    sqlite3_free(sql);
+    
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to insert data into publishers\n");
+        fprintf(stderr, "SQLite error: %s\n", err_msg);
+        sqlite3_free(err_msg);
+    }
+}
+
+void sqlite_insert_book(const char *title, const char *annotation, int pages, const char *isbn, int author_id, int publisher_id) {
+    if (db == NULL) {
+        fprintf(stderr, "Database is not open.\n");
+        return;
+    }
+    
+    char *sql = sqlite3_mprintf("INSERT INTO books (title, annotation, pages, isbn, author_id, publisher_id) VALUES (%Q, %Q, %d, %Q, %d, %d);", 
+                                title, annotation, pages, isbn, author_id, publisher_id);
+    char *err_msg = 0;
+    int rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    sqlite3_free(sql);
+    
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to insert data into books\n");
+        fprintf(stderr, "SQLite error: %s\n", err_msg);
+        sqlite3_free(err_msg);
+    }
+}
+
 void sqlite_exit() {
     sqlite_close_db();
     printf("Exiting...\n");
