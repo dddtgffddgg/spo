@@ -10,6 +10,7 @@ void sqlite_open_db() {
     if (rc != SQLITE_OK) {
         fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
+        db = NULL;
     }
 }
 
@@ -21,12 +22,7 @@ int callback(void *NotUsed, int argc, char **argv, char **azColName) {
     return 0;
 }
 
-void sqlite_close_db() {
-    if (db != NULL) {
-        sqlite3_close(db);
-        db = NULL;
-    }
-}
+
 
 void sqlite_get_data() {
     if (db == NULL) {
@@ -110,6 +106,13 @@ void sqlite_insert_book(const char *title, const char *annotation, int pages, co
         fprintf(stderr, "Failed to insert data into books\n");
         fprintf(stderr, "SQLite error: %s\n", err_msg);
         sqlite3_free(err_msg);
+    }
+}
+
+void sqlite_close_db() {
+    if (db != NULL) {
+        sqlite3_close(db);
+        db = NULL;
     }
 }
 
