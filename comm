@@ -1,4 +1,3 @@
-** (lab4:6215): WARNING **: 14:13:31.679: Не удалось открыть файл «lab04.glade»: Нет такого файла или каталога
-
-free(): invalid pointer
-Аварийный останов (образ памяти сброшен на диск)
+Could not find signal handler 'on_cellrenderertext_id_edited'.  Did you compile with -rdynamic?
+Database is not open.
+Connection closed.
