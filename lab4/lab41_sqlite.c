@@ -4,7 +4,6 @@
 
 static sqlite3 *db = NULL;
 
-
 void sqlite_open_db() {
     int rc;
     rc = sqlite3_open(DB_FILE, &db);
@@ -14,9 +13,8 @@ void sqlite_open_db() {
     }
 }
 
-int callback(void *NotUsed, int argc, char **argv, char **azColName){
-    int i;
-    for(i = 0; i < argc; i++){
+int callback(void *NotUsed, int argc, char **argv, char **azColName) {
+    for (int i = 0; i < argc; i++) {
         printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
     }
     printf("\n");
@@ -37,10 +35,20 @@ void sqlite_get_data() {
     }
     
     char *sql = "SELECT \
-                  id, \
-                  name \
-              FROM \
-                  my_table;";
+                    books.book_id, \
+                    books.title, \
+                    books.annotation, \
+                    books.pages, \
+                    books.isbn, \
+                    authors.author_id, \
+                    authors.name AS author_name, \
+                    publishers.publisher_id, \
+                    publishers.name AS publisher_name, \
+                    publishers.city \
+                 FROM \
+                    books \
+                 INNER JOIN authors ON books.author_id = authors.author_id \
+                 INNER JOIN publishers ON books.publisher_id = publishers.publisher_id;";
     char *err_msg = 0;
     int rc = sqlite3_exec(db, sql, callback, NULL, &err_msg);
     if (rc != SQLITE_OK) {
@@ -53,4 +61,4 @@ void sqlite_get_data() {
 void sqlite_exit() {
     sqlite_close_db();
     printf("Exiting...\n");
-} 
+}
