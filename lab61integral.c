@@ -27,6 +27,6 @@ def runge_rule_integration(epsilon):
         delta = abs(integral_2n - integral_n) / 3
     return integral_2n
 
-epsilon = 0.0001  # желаемая точность
+epsilon = 0.0001  
 result = runge_rule_integration(epsilon)
 print("Приближенное значение интеграла:", result)
