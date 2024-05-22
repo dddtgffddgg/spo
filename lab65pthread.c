@@ -2,66 +2,79 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define N 4 // Размер матрицы
-#define NUM_THREADS N // Количество потоков
+#define N 10
+#define NUM_THREADS 4
 
-int matrix[N][N] = {{1, 2, 3, 4}, 
-                    {5, 6, 7, 8}, 
-                    {9, 10, 11, 12}, 
-                    {13, 14, 15, 16}}; // Пример матрицы
-
-double determinant = 0; // Определитель
+int matrix[N][N];
+int det = 0;
+pthread_mutex_t mutex;
 
 typedef struct {
-    int row_start;
-    int row_end;
+    int row;
+    int n;
 } ThreadData;
 
-void *calculateDeterminant(void *arg) {
-    ThreadData *data = (ThreadData *)arg;
-    int i, j, k;
-    double det = 1;
+void *calculate_determinant(void *args) {
+    ThreadData *data = (ThreadData *)args;
+    int sub_det = 0;
+    int temp[N][N];
+    int sign = (data->row % 2 == 0) ? 1 : -1;
     
-    // Приведение матрицы к треугольному виду
-    for (i = data->row_start; i < data->row_end; i++) {
-        for (j = i + 1; j < N; j++) {
-            double ratio = matrix[j][i] / (double)matrix[i][i];
-            for (k = 0; k < N; k++) {
-                matrix[j][k] -= ratio * matrix[i][k];
+    for (int i = 0; i < data->n; i++) {
+        int subi = 0;
+        for (int j = 1; j < data->n; j++) {
+            int subj = 0;
+            for (int k = 0; k < data->n; k++) {
+                if (k == i) continue;
+                temp[subi][subj] = matrix[data->row * data->n + j][k];
+                subj++;
             }
+            subi++;
         }
+        sub_det = sub_det + sign * matrix[data->row * data->n][i] * determinant(temp, data->n - 1);
+        sign = -sign;
     }
     
-    // Вычисление определителя как произведение элементов на главной диагонали
-    for (i = 0; i < N; i++) {
-        det *= matrix[i][i];
-    }
-    
-    determinant = det;
-    
+    pthread_mutex_lock(&mutex);
+    det += sub_det;
+    pthread_mutex_unlock(&mutex);
     pthread_exit(NULL);
 }
 
-int main() {
-    pthread_t threads[NUM_THREADS];
-    ThreadData threadData[NUM_THREADS];
-    int i;
+int determinant(int m[N][N], int n) {
+    if (n == 1) return m[0][0];
+    if (n == 2) return m[0][0] * m[1][1] - m[0][1] * m[1][0];
     
-    for (i = 0; i < NUM_THREADS; i++) {
-        threadData[i].row_start = i * (N / NUM_THREADS);
-        threadData[i].row_end = (i + 1) * (N / NUM_THREADS);
-        if (i == NUM_THREADS - 1) {
-            threadData[i].row_end = N;
-        }
-        
-        pthread_create(&threads[i], NULL, calculateDeterminant, (void *)&threadData[i]);
+    pthread_t threads[NUM_THREADS];
+    ThreadData thread_data[NUM_THREADS];
+    int row = 0;
+    
+    for (int i = 0; i < NUM_THREADS; i++) {
+        thread_data[i].row = row;
+        thread_data[i].n = n;
+        pthread_create(&threads[i], NULL, calculate_determinant, (void *)&thread_data[i]);
+        row++;
     }
     
-    for (i = 0; i < NUM_THREADS; i++) {
+    for (int i = 0; i < NUM_THREADS; i++) {
         pthread_join(threads[i], NULL);
     }
     
-    printf("Determinant: %.2f\n", determinant);
+    return det;
+}
+
+int main() {
+    pthread_mutex_init(&mutex, NULL);
+    printf("Enter the elements of %dx%d matrix:\n", N, N);
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
+    }
     
+    int det = determinant(matrix, N);
+    printf("Determinant of the matrix: %d\n", det);
+    
+    pthread_mutex_destroy(&mutex);
     return 0;
 }
