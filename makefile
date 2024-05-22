@@ -1,34 +1,27 @@
-CC=gcc
-CFLAGS=-Wall -Wextra -pedantic -O3
-OMP_FLAGS=-fopenmp
+EXEC_SEQ = seq
+SRC_SEQ = $(EXEC_SEQ).c
+EXEC_PAR_PT = par_pthreads
+SRC_PAR_PT = $(EXEC_PAR_PT).c
+EXEC_PAR_OMP = par_openmp
+SRC_PAR_OMP = $(EXEC_PAR_OMP).c
+CFLAGS_OMP = -fopenmp
+CFLAGS_PT = -pthread
 
-EXEC_1 = program_1
-SRC_1 = $(EXEC_1).c
+all: $(EXEC_SEQ) $(EXEC_PAR_PT) $(EXEC_PAR_OMP)
+	./$(EXEC_SEQ)
+	./$(EXEC_PAR_PT)
+	./$(EXEC_PAR_OMP)
 
-EXEC_2 = program_2
-SRC_2 = $(EXEC_2).c
+$(EXEC_SEQ): $(SRC_SEQ)
+	gcc $< -o $@
 
-EXEC_3 = program_3
-SRC_3 = $(EXEC_3).c
+$(EXEC_PAR_PT): $(SRC_PAR_PT)
+	gcc $< -o $@ $(CFLAGS_PT)
 
-.PHONY: all clean
-
-all: $(EXEC_1) $(EXEC_2) $(EXEC_3)
-	@echo "Running $(EXEC_1)"
-	@time ./$(EXEC_1)
-	@echo "Running $(EXEC_2)"
-	@time ./$(EXEC_2)
-	@echo "Running $(EXEC_3)"
-	@time ./$(EXEC_3)
-
-$(EXEC_1): $(SRC_1)
-	$(CC) $(CFLAGS) -o $@ $< -lm
-
-$(EXEC_2): $(SRC_2)
-	$(CC) $(CFLAGS) -o $@ $< -pthread
-
-$(EXEC_3): $(SRC_3)
-	$(CC) $(CFLAGS) $(OMP_FLAGS) -o $@ $< -lm
+$(EXEC_PAR_OMP): $(SRC_PAR_OMP)
+	gcc $< -o $@ $(CFLAGS_OMP)
 
 clean:
-	rm -f $(EXEC_1) $(EXEC_2) $(EXEC_3)
+	rm -f $(EXEC_SEQ)
+	rm -f $(EXEC_PAR_PT)
+	rm -f $(EXEC_PAR_OMP)
