@@ -1,0 +1,13 @@
+CC = gcc
+CFLAGS = -Wall -pthread
+
+all: sequential_det pthread_det
+
+sequential_det: sequential_det.c
+	$(CC) $(CFLAGS) -o sequential_det sequential_det.c
+
+pthread_det: pthread_det.c
+	$(CC) $(CFLAGS) -o pthread_det pthread_det.c
+
+clean:
+	rm -f sequential_det pthread_det
