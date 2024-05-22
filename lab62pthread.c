@@ -1,90 +1,77 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
 #include <math.h>
+#include <pthread.h>
 
-#define N 8
-#define M 16
 #define NUM_THREADS 4
 
-long double a[N][M];
-long double x[M], b[N];
+typedef struct {
+    long double a;
+    long double b;
+    int n;
+    long double result;
+} ThreadData;
 
-typedef struct
-{
-    unsigned int low;
-    unsigned int high;
-} thread_data;
-
-thread_data thread_data_arr[NUM_THREADS];
-
-void *calc_part(void *threadarg)
-{
-    thread_data *my = (thread_data *)threadarg;
-    unsigned int i, j;
-    for (i = my->low; i < my->high; i++)
-    {
-        b[i] = 0.0;
-        for (j = 0; j < M; j++)
-            b[i] += a[i][j] * x[j];
+long double f(long double x) {
+    if (x >= 0 && x <= 1) {
+        return cosl(x + x * x * x);
+    } else if (x > 1 && x <= 2) {
+        return expl(-x * x) - x * x + 2 * x;
     }
-    pthread_exit(NULL);
+    return 0; 
 }
 
-int main()
-{
-    unsigned int i, j;
-    printf("Matrix:\n");
-    for (i = 0; i < N; i++)
-    {
-        for (j = 0; j < M; j++)
-        {
-            a[i][j] = (long double)((i + j) * (i + 1) * (j + 1));
-            printf("%12.20Lf", a[i][j]);
-        }
-        printf("\n");
+void* integrate(void* arg) {
+    ThreadData* data = (ThreadData*) arg;
+    long double h = (data->b - data->a) / data->n;
+    long double sum = 0.0;
+    for (int i = 0; i < data->n; ++i) {
+        long double x = data->a + (i + 0.5) * h;
+        sum += f(x);
     }
-    printf("Vector:\n");
-    for (i = 0; i < M; i++)
-    {
-        x[i] = (long double)((M - i) * (M - i));
-        printf("%12.20Lf", x[i]);
-    }
+    data->result = sum * h;
+    return NULL;
+}
 
+long double parallel_integrate(long double a, long double b, int n) {
     pthread_t threads[NUM_THREADS];
-    pthread_attr_t attr;
-    int rc;
-    void *status;
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    ThreadData thread_data[NUM_THREADS];
+    long double range = (b - a) / NUM_THREADS;
+    long double total_sum = 0.0;
 
-    unsigned int t_part = N / NUM_THREADS;
-    for (i = 0; i < NUM_THREADS; i++)
-    {
-        thread_data_arr[i].low = i * t_part;
-        thread_data_arr[i].high = thread_data_arr[i].low + t_part;
-        rc = pthread_create(&threads[i], &attr, calc_part, (void *)&thread_data_arr[i]);
-        if (rc)
-        {
-            printf("ERROR; return code from pthread_create() is %d\n", rc);
-            exit(EXIT_FAILURE);
-        }
-    }
-    pthread_attr_destroy(&attr);
-    for (i = 0; i < NUM_THREADS; i++)
-    {
-        rc = pthread_join(threads[i], &status);
-        if (rc)
-        {
-            printf("ERROR; return code from pthread_join() is %d\n", rc);
-            exit(EXIT_FAILURE);
-        }
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        thread_data[i].a = a + i * range;
+        thread_data[i].b = a + (i + 1) * range;
+        thread_data[i].n = n / NUM_THREADS;
+        thread_data[i].result = 0.0;
+        pthread_create(&threads[i], NULL, integrate, &thread_data[i]);
     }
 
-    printf("\nParallel pthreads product:\n");
-    for (i = 0; i < N; i++)
-        printf("%12.20Lf", b[i]);
-    printf("\n");
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        pthread_join(threads[i], NULL);
+        total_sum += thread_data[i].result;
+    }
 
+    return total_sum;
+}
+
+int main() {
+    long double a = 0.0, b = 2.0;
+    long double epsilon = 1e-15;
+    int n = 1000; // Initial number of steps
+    long double I_n, I_2n, delta;
+
+    I_n = parallel_integrate(a, b, n);
+    I_2n = parallel_integrate(a, b, 2 * n);
+    delta = fabsl(I_2n - I_n) / 3.0;
+
+    while (delta >= epsilon) {
+        n *= 2;
+        I_n = I_2n;
+        I_2n = parallel_integrate(a, b, 2 * n);
+        delta = fabsl(I_2n - I_n) / 3.0;
+    }
+
+    printf("Approximated integral value: %.20Lf\n", I_2n);
     return 0;
 }
