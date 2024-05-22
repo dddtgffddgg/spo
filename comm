@@ -1,3 +1,1 @@
-Could not find signal handler 'on_cellrenderertext_id_edited'.  Did you compile with -rdynamic?
-Database is not open.
-Connection closed.
+cannot open source file "omp.h"
