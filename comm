@@ -1,1 +1,6 @@
-cannot open source file "omp.h"
+GtkButton::clicked посылается один раз
+	GtkButtonClass->clicked(); Запустить первым
+	-> void on_btnexit_clicked (GtkButton *btnexit, user_data); 
+GtkButton::clicked посылается один раз
+	GtkButtonClass->clicked(); Запустить первым
+	-> void on_btn_add_clicked (GtkButton *btn_add, user_data); 
